@@ -4,18 +4,21 @@ const NIGHT_START = 22
 const NIGHT_END = 6
 
 const isNightMode = ref(false)
+const currentHour = ref(new Date().getHours())
 let timer: ReturnType<typeof setInterval> | null = null
 let dependencyCount = 0
 
 function checkNightMode() {
-  const hour = new Date().getHours()
+  const now = new Date()
+  const hour = now.getHours()
+  currentHour.value = hour
   isNightMode.value = hour >= NIGHT_START || hour < NIGHT_END
 }
 
 export function useNightMode() {
   const nightGreeting = computed(() => {
     if (!isNightMode.value) return ''
-    const hour = new Date().getHours()
+    const hour = currentHour.value
     if (hour >= 22 && hour < 24) return '夜深了，放慢脚步，享受安静的夜聊时光 🌙'
     if (hour >= 0 && hour < 3) return '凌晨了，还在聊呀，注意休息哦 🌜'
     if (hour >= 3 && hour < 6) return '天快亮了，珍惜这段深夜的陪伴 🌄'
@@ -24,7 +27,7 @@ export function useNightMode() {
 
   const nightHint = computed(() => {
     if (!isNightMode.value) return ''
-    const hour = new Date().getHours()
+    const hour = currentHour.value
     if (hour >= 22 && hour < 24) return '夜深了，轻声聊聊吧～'
     if (hour >= 0 && hour < 3) return '夜深人静，小声一点哦～'
     if (hour >= 3 && hour < 6) return '凌晨时分，温柔一点吧～'
@@ -52,5 +55,6 @@ export function useNightMode() {
     isNightMode,
     nightGreeting,
     nightHint,
+    currentHour,
   }
 }
