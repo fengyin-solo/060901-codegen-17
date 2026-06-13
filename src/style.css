@@ -82,3 +82,15 @@ textarea {
 ::-webkit-scrollbar-thumb:hover {
   background: #a1a1a1;
 }
+
+.night-mode ::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+.night-mode ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+.night-mode ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}

@@ -7,6 +7,7 @@ const props = defineProps<{
   topic: Topic | null
   isFlipping: boolean
   playerName?: string
+  nightMode?: boolean
 }>()
 
 const isFlipped = ref(false)
@@ -31,11 +32,18 @@ watch(() => props.topic, () => {
       class="flip-card relative w-full h-80 transition-transform duration-600 transform-style-preserve-3d"
       :class="{ 'rotate-y-180': isFlipped }"
     >
-      <div class="flip-card-front absolute inset-0 backface-hidden rounded-3xl shadow-2xl flex flex-col items-center justify-center bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 p-8">
-        <div class="text-7xl mb-4 animate-bounce">🎁</div>
-        <h3 class="text-white text-2xl font-bold mb-2">下一个话题</h3>
+      <div 
+        class="flip-card-front absolute inset-0 backface-hidden rounded-3xl shadow-2xl flex flex-col items-center justify-center p-8 transition-colors duration-700"
+        :class="nightMode 
+          ? 'bg-gradient-to-br from-slate-700 via-indigo-800 to-slate-700' 
+          : 'bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400'"
+      >
+        <div class="text-7xl mb-4" :class="{ 'animate-bounce': !nightMode }">{{ nightMode ? '🌙' : '🎁' }}</div>
+        <h3 class="text-white text-2xl font-bold mb-2">
+          {{ nightMode ? '今晚的话题' : '下一个话题' }}
+        </h3>
         <p class="text-white/80 text-center">
-          {{ playerName ? `轮到 ${playerName} 啦！` : '点击翻牌' }}
+          {{ playerName ? `轮到 ${playerName} 啦！` : (nightMode ? '轻轻翻牌' : '点击翻牌') }}
         </p>
         <div class="mt-6 flex gap-2">
           <span 
@@ -61,13 +69,13 @@ watch(() => props.topic, () => {
             {{ topic.content }}
           </p>
           <p class="text-white/80 text-sm">
-            —— {{ topic.isAnonymous ? '🎭 匿名朋友' : topic.author }}
+            —— {{ topic.isAnonymous ? (nightMode ? '🎭 夜晚的朋友' : '🎭 匿名朋友') : topic.author }}
           </p>
         </div>
         <div v-else class="text-center text-white">
-          <div class="text-6xl mb-4">😅</div>
-          <p class="text-xl">没有话题了</p>
-          <p class="text-white/80 text-sm mt-2">点击"急救"试试！</p>
+          <div class="text-6xl mb-4">{{ nightMode ? '🌙' : '😅' }}</div>
+          <p class="text-xl">{{ nightMode ? '话题聊完了' : '没有话题了' }}</p>
+          <p class="text-white/80 text-sm mt-2">{{ nightMode ? '夜深了，休息吧～' : '点击"急救"试试！' }}</p>
         </div>
       </div>
     </div>
